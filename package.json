@@ -6,13 +6,20 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "dev:nodemon": "nodemon --exec tsx src/index.ts",
-    "build": "tsc && prisma generate",
-    "vercel-build": "tsc && prisma generate",
+    "build": "rimraf dist  && tsc && prisma generate",
+    "add-build": "git add dist",
+    "vercel-build": "rimraf dist  && tsc && prisma generate",
+    "ts.check": "tsc --project tsconfig.json",
     "start": "node dist/index.js",
     "type-check": "tsc --noEmit",
-    "clean": "rm -rf dist",
+    "clean": "rimraf dist",
     "seed": "npx tsx src/config/seed.ts"
   },
+  "pre-commit": [
+    "ts.check",
+    "build",
+    "add-build"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -25,7 +32,9 @@
     "@types/pg": "^8.15.2",
     "concurrently": "^9.1.2",
     "nodemon": "^3.1.10",
+    "pre-commit": "^1.2.2",
     "prisma": "^6.8.2",
+    "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3"
