@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
     let limit = parseInt(req.query['limit'] as string) || 20;
     limit = Math.min(limit, 100); // Cap the limit to 100
 
-    const query: Prisma.ProductFindManyArgs = {
+    const query: any = {
         include: {
             category: true
         },
