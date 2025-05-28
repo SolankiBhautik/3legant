@@ -6,7 +6,6 @@ yarn-error.log*
 generated/prisma/
 
 # Build outputs
-dist/
 build/
 *.tsbuildinfo
 
