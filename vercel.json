@@ -2,12 +2,10 @@
     "version": 2,
     "builds": [
         {
-            "src": "dist/index.js",
+            "src": "api/index.ts",
             "use": "@vercel/node",
             "config": {
                 "includeFiles": [
-                    "dist/**",
-                    "generated/**",
                     "prisma/**"
                 ]
             }
@@ -16,10 +14,7 @@
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "dist/index.js"
+            "dest": "api/index.js"
         }
-    ],
-    "env": {
-        "NODE_ENV": "production"
-    }
+    ]
 }
