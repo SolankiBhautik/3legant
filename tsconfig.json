@@ -8,7 +8,7 @@
         "allowJs": true,
         "checkJs": false,
         "outDir": "./dist",
-        "rootDir": "./src",
+        "rootDir": "api/",
         "removeComments": true,
         "noEmitOnError": true,
         "strict": true,
@@ -32,7 +32,7 @@
         "emitDecoratorMetadata": true
     },
     "include": [
-        "src/**/*"
+        "api/**/*"
     ],
     "exclude": [
         "node_modules",
