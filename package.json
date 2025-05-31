@@ -6,7 +6,7 @@
     "dev": "tsx watch api/index.ts",
     "dev:nodemon": "nodemon --exec tsx api/index.ts",
     "build": "tsc ",
-    "vercel-build": "tsc && npx prisma generate && npx prisma db push",
+    "vercel-build": "echo $DATABASE_URL && tsc && npx prisma generate && npx prisma db push",
     "ts.check": "tsc --project tsconfig.json",
     "start": "node dist/index.js",
     "type-check": "tsc --noEmit",
