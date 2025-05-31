@@ -1,16 +1,17 @@
 import express from 'express';
 import prisma from '../config/db.js';
+import { ErrorResponse } from '../types/index.js';
 
 const router = express.Router();
 
+// list
 router.get('/', async (req, res) => {
-
     let featured = req.query['featured'] == 'true' ? true : false;
 
-    let search = req.query['search'] as string || null;
+    let search = req.query['search']
 
     let limit = parseInt(req.query['limit'] as string) || 20;
-    limit = Math.min(limit, 100); // Cap the limit to 100
+    limit = Math.min(limit, 100);
 
     const query: any = {
         include: {
@@ -65,10 +66,14 @@ router.get('/', async (req, res) => {
     res.send(products);
 });
 
-
-router.post('/', async (req, res): Promise<any> => {
+// create
+router.post('/', async (req, res) => {
     if (!req.body.name || !req.body.price || isNaN(req.body.price) || req.body.price <= 0 || !req.body.description || !req.body.image) {
-        return res.status(400).send({ error: 'Name, price, description, and image are required' });
+        let errorResponse: ErrorResponse = {
+            error: 'Name, price, description, and image are required'
+        };
+        res.status(400).send(errorResponse);
+        return;
     }
     const { name, price, categoryId, description, image } = req.body;
 
@@ -85,11 +90,15 @@ router.post('/', async (req, res): Promise<any> => {
     res.status(201).send(product);
 });
 
-
-router.get('/:id', async (req, res): Promise<any> => {
+// detail
+router.get('/:id', async (req, res) => {
     const id = parseInt(req.params.id, 10);
     if (isNaN(id)) {
-        return res.status(400).send({ error: 'Invalid product ID' });
+        let errorResponse: ErrorResponse = {
+            error: 'Invalid product ID'
+        };
+        res.status(400).send(errorResponse);
+        return
     }
 
     try {
@@ -101,20 +110,33 @@ router.get('/:id', async (req, res): Promise<any> => {
         });
 
         if (!product) {
-            return res.status(404).send({ error: 'Product not found' });
+            let errorResponse: ErrorResponse = {
+                error: 'Product not found'
+            };
+            res.status(404).send(errorResponse);
+            return
         }
 
-        return res.send(product);
+        res.send(product);
+        return
     } catch (error) {
-        return res.status(500).send({ error: 'Internal server error' });
+        let errorResponse: ErrorResponse = {
+            error: 'Internal server error'
+        };
+        res.status(500).send(errorResponse);
+        return
     }
 });
 
-
-router.put('/:id', async (req, res): Promise<any> => {
+// update
+router.put('/:id', async (req, res) => {
     const id = parseInt(req.params.id, 10);
     if (isNaN(id)) {
-        return res.status(400).send({ error: 'Invalid product ID' });
+        let errorResponse: ErrorResponse = {
+            error: 'Invalid product ID'
+        };
+        res.status(400).send(errorResponse);
+        return
     }
 
     try {
@@ -123,7 +145,11 @@ router.put('/:id', async (req, res): Promise<any> => {
         });
 
         if (!product) {
-            return res.status(404).send({ error: 'Product not found' });
+            let errorResponse: ErrorResponse = {
+                error: 'Product not found'
+            };
+            res.status(404).send(errorResponse);
+            return
         }
 
         const name = req.body.name || product.name;
@@ -134,18 +160,26 @@ router.put('/:id', async (req, res): Promise<any> => {
             data: { name, price }
         });
 
-        return res.send(updatedProduct);
+        res.send(updatedProduct);
+        return;
     } catch (error) {
-        return res.status(500).send({ error: 'Internal server error' });
+        let errorResponse: ErrorResponse = {
+            error: 'Internal server error'
+        };
+        res.status(500).send(errorResponse);
+        return;
     }
 });
 
-
-
-router.delete('/:id', async (req, res): Promise<any> => {
+// delete
+router.delete('/:id', async (req, res) => {
     const id = parseInt(req.params.id, 10);
     if (isNaN(id)) {
-        return res.status(400).send({ error: 'Invalid product ID' });
+        let errorResponse: ErrorResponse = {
+            error: 'Invalid product ID'
+        };
+        res.status(400).send(errorResponse);
+        return;
     }
 
     try {
@@ -154,16 +188,25 @@ router.delete('/:id', async (req, res): Promise<any> => {
         });
 
         if (!product) {
-            return res.status(404).send({ error: 'Product not found' });
+            let errorResponse: ErrorResponse = {
+                error: 'Product not found'
+            };
+            res.status(404).send(errorResponse);
+            return
         }
 
         await prisma.product.delete({
             where: { id }
         });
 
-        return res.status(204).send();
+        res.status(204).send();
+        return
     } catch (error) {
-        return res.status(500).send({ error: 'Internal server error' });
+        let errorResponse: ErrorResponse = {
+            error: 'Internal server error'
+        };
+        res.status(500).send(errorResponse);
+        return
     }
 });
 
